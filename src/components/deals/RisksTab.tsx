@@ -8,10 +8,12 @@ import {
   CheckCircle,
   Plus,
   ChevronRight,
-  Filter
+  Filter,
+  Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { RiskHeatMap } from '@/components/risks/RiskHeatMap';
 
 interface RisksTabProps {
   risks: Risk[];
@@ -90,37 +92,66 @@ export function RisksTab({ risks }: RisksTabProps) {
         </div>
       </div>
 
-      {/* Risk Summary */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className="glass-card rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="h-4 w-4 text-status-danger" />
-            <span className="text-sm text-muted-foreground">Critical</span>
-          </div>
-          <p className="font-display text-2xl font-bold text-foreground">{criticalCount}</p>
+      {/* Risk Heat Map and Summary */}
+      <div className="grid grid-cols-3 gap-6">
+        {/* Heat Map */}
+        <div className="col-span-2">
+          <RiskHeatMap risks={risks} />
         </div>
-        <div className="glass-card rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertCircle className="h-4 w-4 text-orange-400" />
-            <span className="text-sm text-muted-foreground">High</span>
+
+        {/* Summary Stats */}
+        <div className="space-y-4">
+          <div className="glass-card rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle className="h-4 w-4 text-status-danger" />
+              <span className="text-sm text-muted-foreground">Critical</span>
+            </div>
+            <p className="font-display text-2xl font-bold text-foreground">{criticalCount}</p>
           </div>
-          <p className="font-display text-2xl font-bold text-foreground">{highCount}</p>
+          <div className="glass-card rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="h-4 w-4 text-orange-400" />
+              <span className="text-sm text-muted-foreground">High</span>
+            </div>
+            <p className="font-display text-2xl font-bold text-foreground">{highCount}</p>
+          </div>
+          <div className="glass-card rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Shield className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Total Open</span>
+            </div>
+            <p className="font-display text-2xl font-bold text-foreground">{openCount}</p>
+          </div>
+          <div className="glass-card rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle className="h-4 w-4 text-status-success" />
+              <span className="text-sm text-muted-foreground">Mitigated</span>
+            </div>
+            <p className="font-display text-2xl font-bold text-foreground">
+              {risks.filter(r => r.status === 'mitigated' || r.status === 'closed').length}
+            </p>
+          </div>
         </div>
-        <div className="glass-card rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Shield className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Total Open</span>
+      </div>
+
+      {/* AI Risk Detection Button */}
+      <div className="glass-card rounded-xl p-4 border-l-4 border-primary">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Sparkles className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h4 className="font-medium text-foreground">AI Risk Detection</h4>
+              <p className="text-sm text-muted-foreground">
+                Automatically detect risks from uploaded documents
+              </p>
+            </div>
           </div>
-          <p className="font-display text-2xl font-bold text-foreground">{openCount}</p>
-        </div>
-        <div className="glass-card rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <CheckCircle className="h-4 w-4 text-status-success" />
-            <span className="text-sm text-muted-foreground">Mitigated</span>
-          </div>
-          <p className="font-display text-2xl font-bold text-foreground">
-            {risks.filter(r => r.status === 'mitigated' || r.status === 'closed').length}
-          </p>
+          <Button variant="glow" size="sm">
+            <Sparkles className="h-4 w-4 mr-1.5" />
+            Scan Documents
+          </Button>
         </div>
       </div>
 
